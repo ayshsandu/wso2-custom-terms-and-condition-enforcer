@@ -35,9 +35,9 @@ public class TnCPostAuthnHandler extends AbstractPostAuthnHandler {
         }
 
         if (isConsentPrompted(context)) {
-            return handlePostConsent(request, response, context);
+            return handlePostConsent(request, response, context, authenticatedUser);
         } else {
-            return handlePreConsent(request, response, context);
+            return handlePreConsent(request, response, context, authenticatedUser);
         }
     }
 
@@ -52,7 +52,7 @@ public class TnCPostAuthnHandler extends AbstractPostAuthnHandler {
     }
 
     protected PostAuthnHandlerFlowStatus handlePreConsent(HttpServletRequest request, HttpServletResponse response,
-                                                          AuthenticationContext context)
+                                                          AuthenticationContext context, AuthenticatedUser authenticatedUser)
             throws PostAuthenticationFailedException {
 
         redirectToConsentPage(response, context);
@@ -61,13 +61,17 @@ public class TnCPostAuthnHandler extends AbstractPostAuthnHandler {
     }
 
     protected PostAuthnHandlerFlowStatus handlePostConsent(HttpServletRequest request, HttpServletResponse response,
-                                                           AuthenticationContext context)
+                                                           AuthenticationContext context, AuthenticatedUser authenticatedUser)
             throws PostAuthenticationFailedException {
 
         final String TNC_INPUT = "tcInput";
         final String TNC_ON_INPUT = "on";
 
-       /*
+        String username = authenticatedUser.getUserName();
+        String tenantDomain = authenticatedUser.getTenantDomain();
+        // Map<String, String> claimValues = TCUtils.getUserClaims(username, tenantDomain);
+
+        /*
         In here we can process the request submitted from terms and condition page.
          */
         String input = request.getParameter(TNC_INPUT);
